@@ -4,6 +4,15 @@ import { Analytics } from '@vercel/analytics/next'
 import { SmoothScroll } from '@/components/smooth-scroll'
 import './globals.css'
 
+const grainNoiseSvg = encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.88" numOctaves="4" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(#n)" opacity="0.52"/></svg>',
+)
+
+const grainOverlayStyle = {
+  backgroundImage: `url("data:image/svg+xml,${grainNoiseSvg}")`,
+  backgroundRepeat: 'repeat' as const,
+}
+
 const playfair = Playfair_Display({ 
   subsets: ["latin"],
   variable: '--font-serif',
@@ -51,6 +60,11 @@ export default function RootLayout({
     >
       <body className="font-sans antialiased">
         <SmoothScroll>{children}</SmoothScroll>
+        <div
+          aria-hidden
+          className="pointer-events-none fixed inset-0 z-100 opacity-[0.028]"
+          style={grainOverlayStyle}
+        />
         <Analytics />
       </body>
     </html>

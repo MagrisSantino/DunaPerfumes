@@ -1,8 +1,19 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion"
 import { Headset, Package, Wallet, Instagram, ArrowRight } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
+import type { ComponentProps, ReactNode } from "react"
+import { useRef } from "react"
+
+const perfumeImageBlur =
+  "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+
+const productLineImages = {
+  originales: "/yara.png",
+  alternativas: "/club.png",
+} as const
 
 const heroTextContainerVariants = {
   hidden: {},
@@ -115,27 +126,141 @@ const beneficioCardVariants = {
   },
 }
 
+const brandTickerLogos: ReadonlyArray<{
+  src: string
+  alt: string
+}> = [
+  { src: "/brands/lattafa.png", alt: "Lattafa" },
+  { src: "/brands/afnan.png", alt: "Afnan" },
+  { src: "/brands/armaf.png", alt: "Armaf" },
+  { src: "/brands/gissah.png", alt: "Gissah" },
+  { src: "/brands/bharara.png", alt: "Bharara" },
+  { src: "/brands/zimaya.png", alt: "Zimaya" },
+  { src: "/brands/french-avenue.png", alt: "French Avenue" },
+]
+
+type MagneticHeroLinkProps = ComponentProps<typeof Link> & {
+  children: ReactNode
+}
+
+function MagneticHeroLink({ children, className, href, ...linkProps }: MagneticHeroLinkProps) {
+  const zoneRef = useRef<HTMLDivElement>(null)
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+  const spring = { stiffness: 220, damping: 28, mass: 0.35 }
+  const springX = useSpring(x, spring)
+  const springY = useSpring(y, spring)
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = zoneRef.current
+    if (!el) return
+    const r = el.getBoundingClientRect()
+    const cx = r.left + r.width / 2
+    const cy = r.top + r.height / 2
+    const strength = 0.32
+    x.set((e.clientX - cx) * strength)
+    y.set((e.clientY - cy) * strength)
+  }
+
+  const handleMouseLeave = () => {
+    x.set(0)
+    y.set(0)
+  }
+
+  return (
+    <div
+      ref={zoneRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="relative inline-flex w-full justify-center sm:w-auto"
+    >
+      <motion.span
+        style={{ x: springX, y: springY }}
+        className="inline-flex w-full justify-center sm:w-auto"
+      >
+        <Link href={href} className={className} {...linkProps}>
+          {children}
+        </Link>
+      </motion.span>
+    </div>
+  )
+}
+
+function BrandTicker() {
+  return (
+    <section className="bg-muted pt-0 pb-6 lg:pb-8" aria-label="Marcas destacadas">
+      <div className="overflow-hidden py-3 sm:py-4">
+        <motion.div
+          className="flex w-max"
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{
+            duration: 42,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        >
+          {[0, 1].map((copy) => (
+            <div
+              key={copy}
+              className="flex shrink-0 items-center gap-12 px-6 sm:gap-20 sm:px-10"
+              aria-hidden={copy === 1}
+            >
+              {brandTickerLogos.map(({ src, alt }) => {
+                return (
+                  <div
+                    key={`${copy}-${src}`}
+                    className="group/logo flex h-20 w-[300px] shrink-0 items-center justify-center sm:h-24 sm:w-[380px] lg:h-28 lg:w-[440px]"
+                  >
+                    <Image
+                      src={src}
+                      alt={alt}
+                      width={360}
+                      height={96}
+                      sizes="(max-width: 640px) 200px, (max-width: 1024px) 260px, 320px"
+                      className="h-20 w-auto object-contain grayscale opacity-60 transition-all duration-500 hover:opacity-100 sm:h-24 lg:h-28"
+                    />
+                  </div>
+                )
+              })}
+            </div>
+          ))}
+        </motion.div>
+      </div>
+    </section>
+  )
+}
+
 // ============================================
 // NAVBAR COMPONENT
 // ============================================
 function Navbar() {
+  const { scrollY } = useScroll()
+  const dunaColor = useTransform(scrollY, [0, 96], ["#1C1917", "#0F0C0A"])
+
   return (
     <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b border-border/40">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 sm:py-4 lg:px-8">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 sm:py-2.5 lg:px-8">
         {/* Logo */}
         <Link href="/" className="group flex items-center gap-1.5 sm:gap-2">
-          <span className="font-serif text-xl font-semibold tracking-wide text-foreground transition-colors group-hover:text-accent sm:text-2xl">
-            DUNA
-          </span>
-          <span className="hidden font-serif text-sm font-light tracking-widest text-muted-foreground xs:inline sm:inline">
-            Perfumes
-          </span>
+          <motion.span
+            style={{ color: dunaColor }}
+            className="transition-[filter,color] duration-500 ease-out"
+          >
+            <Image
+              src="/logo.png"
+              alt="Duna Perfumes"
+              width={588}
+              height={588}
+              priority
+              className="h-12 w-auto filter grayscale opacity-90"
+            />
+          </motion.span>
         </Link>
 
         {/* CTA Button */}
         <Link
           href="#catalogo"
-          className="group flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-medium text-primary-foreground transition-all hover:bg-primary/90 hover:shadow-lg sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm"
+          className="group flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-all hover:bg-primary/90 hover:shadow-lg sm:gap-2 sm:px-4 sm:py-2 sm:text-sm"
         >
           <span className="hidden sm:inline">Ver Catálogo</span>
           <span className="sm:hidden">Catálogo</span>
@@ -211,19 +336,19 @@ function HeroSection() {
             className="mt-8 flex flex-col items-center justify-center gap-3 px-4 sm:mt-10 sm:flex-row sm:gap-4 sm:px-0"
             variants={heroTextChildVariants}
           >
-            <Link
+            <MagneticHeroLink
               href="#catalogo"
               className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-medium text-primary-foreground shadow-lg transition-all hover:bg-primary/90 hover:shadow-xl sm:w-auto sm:px-8 sm:py-4 sm:text-base"
             >
               Explorar fragancias
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-            <Link
+            </MagneticHeroLink>
+            <MagneticHeroLink
               href="#asesoramiento"
               className="inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-primary/20 bg-transparent px-6 py-3.5 text-sm font-medium text-foreground transition-all hover:border-primary/40 hover:bg-card sm:w-auto sm:px-8 sm:py-4 sm:text-base"
             >
               Asesoramiento personalizado
-            </Link>
+            </MagneticHeroLink>
           </motion.div>
         </motion.div>
       </div>
@@ -296,12 +421,30 @@ function HistoriaSection() {
   )
 }
 
+function ProductLineCollectionLink() {
+  return (
+    <Link
+      href="#"
+      className="group/line relative mt-6 inline-flex items-center gap-2 text-sm font-medium text-accent transition-colors hover:text-accent/90 sm:mt-8"
+    >
+      <span className="relative inline-block pb-0.5">
+        Descubrir colección
+        <span
+          aria-hidden
+          className="pointer-events-none absolute bottom-0 left-1/2 h-px w-full origin-center -translate-x-1/2 scale-x-0 bg-accent transition-transform duration-300 ease-out group-hover/line:scale-x-100"
+        />
+      </span>
+      <ArrowRight className="h-4 w-4 transition-transform group-hover/line:translate-x-1" />
+    </Link>
+  )
+}
+
 // ============================================
 // LÍNEAS DE PRODUCTO SECTION
 // ============================================
 function ProductLinesSection() {
   return (
-    <section id="catalogo" className="bg-muted py-16 sm:py-20 lg:py-32">
+    <section id="catalogo" className="bg-muted pt-16 pb-8 sm:pt-20 sm:pb-10 lg:pt-32 lg:pb-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="mb-10 text-center sm:mb-16">
@@ -317,7 +460,7 @@ function ProductLinesSection() {
         <div className="grid gap-4 sm:gap-6 lg:grid-cols-2 lg:gap-8">
           {/* Card 1 - Originales */}
           <motion.article
-            className="group relative overflow-hidden rounded-2xl bg-card p-6 shadow-sm sm:rounded-3xl sm:p-8 lg:p-12"
+            className="group relative overflow-hidden rounded-2xl border border-border/40 bg-card p-6 shadow-sm transition-[border-color,box-shadow] duration-500 ease-out hover:border-accent/50 sm:rounded-3xl sm:p-8 lg:p-10"
             initial={{ opacity: 0, y: 56 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={productLinesCardViewport}
@@ -331,40 +474,45 @@ function ProductLinesSection() {
               boxShadow: productCardHoverShadow,
             }}
           >
-            {/* Background Accent */}
-            <div className="absolute -right-16 -top-16 h-32 w-32 rounded-full bg-accent/10 transition-transform group-hover:scale-150 sm:-right-20 sm:-top-20 sm:h-40 sm:w-40" />
-            
-            <div className="relative">
-              {/* Badge */}
-              <span className="mb-4 inline-flex items-center rounded-full border border-accent/30 bg-accent/10 px-2.5 py-0.5 text-[10px] font-medium tracking-wide text-accent sm:mb-6 sm:px-3 sm:py-1 sm:text-xs">
-                Premium
-              </span>
+            <div className="absolute -right-16 -top-16 z-0 h-32 w-32 rounded-full bg-accent/10 transition-transform group-hover:scale-150 sm:-right-20 sm:-top-20 sm:h-40 sm:w-40" />
 
-              {/* Title */}
-              <h3 className="font-serif text-xl font-semibold text-foreground sm:text-2xl md:text-3xl lg:text-4xl">
-                Línea Originales
-              </h3>
+            <div className="relative z-10 grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-center lg:gap-10">
+              <div className="order-2 flex flex-col lg:order-1">
+                <span className="mb-4 inline-flex w-fit items-center rounded-full border border-accent/30 bg-accent/10 px-2.5 py-0.5 text-[10px] font-medium tracking-wide text-accent sm:mb-6 sm:px-3 sm:py-1 sm:text-xs">
+                  Premium
+                </span>
 
-              {/* Description */}
-              <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground sm:mt-4 sm:text-base lg:text-lg">
-                Fragancias 100% originales con sello de autenticidad. 
-                Las marcas más exclusivas del mercado árabe a tu alcance.
-              </p>
+                <h3 className="font-serif text-xl font-semibold text-foreground sm:text-2xl md:text-3xl lg:text-4xl">
+                  Línea Originales
+                </h3>
 
-              {/* CTA */}
-              <Link
-                href="#"
-                className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-accent transition-colors hover:text-accent/80 sm:mt-8"
-              >
-                Descubrir colección
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
+                <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground sm:mt-4 sm:text-base lg:text-lg">
+                  Fragancias 100% originales con sello de autenticidad. Las marcas más exclusivas
+                  del mercado árabe a tu alcance.
+                </p>
+
+                <ProductLineCollectionLink />
+              </div>
+
+              <div className="order-1 lg:order-2">
+                <div className="relative mx-auto aspect-3/4 w-full max-w-[260px] overflow-hidden rounded-2xl border border-border/45 bg-muted/60 p-8 shadow-inner sm:max-w-[300px] sm:p-10 lg:mx-0 lg:max-w-none">
+                  <Image
+                    src={productLineImages.originales}
+                    alt="Frasco de perfume — Línea Originales"
+                    fill
+                    sizes="(max-width: 1024px) 280px, 50vw"
+                    placeholder="blur"
+                    blurDataURL={perfumeImageBlur}
+                    className="object-contain object-[60%_50%] transition-transform duration-650 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05] group-hover:-translate-y-2.5"
+                  />
+                </div>
+              </div>
             </div>
           </motion.article>
 
           {/* Card 2 - Alternativas */}
           <motion.article
-            className="group relative overflow-hidden rounded-2xl bg-primary p-6 shadow-sm sm:rounded-3xl sm:p-8 lg:p-12"
+            className="group relative overflow-hidden rounded-2xl border border-primary-foreground/18 bg-primary p-6 shadow-sm transition-[border-color,box-shadow] duration-500 ease-out hover:border-accent/55 sm:rounded-3xl sm:p-8 lg:p-10"
             initial={{ opacity: 0, y: 56 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={productLinesCardViewport}
@@ -378,34 +526,39 @@ function ProductLinesSection() {
               boxShadow: productCardHoverShadowPrimary,
             }}
           >
-            {/* Background Accent */}
-            <div className="absolute -right-16 -top-16 h-32 w-32 rounded-full bg-accent/20 transition-transform group-hover:scale-150 sm:-right-20 sm:-top-20 sm:h-40 sm:w-40" />
-            
-            <div className="relative">
-              {/* Badge */}
-              <span className="mb-4 inline-flex items-center rounded-full border border-accent/40 bg-accent/20 px-2.5 py-0.5 text-[10px] font-medium tracking-wide text-accent sm:mb-6 sm:px-3 sm:py-1 sm:text-xs">
-                Best Seller
-              </span>
+            <div className="absolute -right-16 -top-16 z-0 h-32 w-32 rounded-full bg-accent/20 transition-transform group-hover:scale-150 sm:-right-20 sm:-top-20 sm:h-40 sm:w-40" />
 
-              {/* Title */}
-              <h3 className="font-serif text-xl font-semibold text-primary-foreground sm:text-2xl md:text-3xl lg:text-4xl">
-                Línea Alternativas
-              </h3>
+            <div className="relative z-10 grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-center lg:gap-10">
+              <div className="order-2 flex flex-col lg:order-1">
+                <span className="mb-4 inline-flex w-fit items-center rounded-full border border-accent/40 bg-accent/20 px-2.5 py-0.5 text-[10px] font-medium tracking-wide text-accent sm:mb-6 sm:px-3 sm:py-1 sm:text-xs">
+                  Best Seller
+                </span>
 
-              {/* Description */}
-              <p className="mt-3 max-w-md text-sm leading-relaxed text-primary-foreground/80 sm:mt-4 sm:text-base lg:text-lg">
-                Fragancias inspiradas de altísima persistencia. 
-                La mejor relación calidad-precio sin renunciar a la exclusividad.
-              </p>
+                <h3 className="font-serif text-xl font-semibold text-primary-foreground sm:text-2xl md:text-3xl lg:text-4xl">
+                  Línea Alternativas
+                </h3>
 
-              {/* CTA */}
-              <Link
-                href="#"
-                className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-accent transition-colors hover:text-accent/80 sm:mt-8"
-              >
-                Descubrir colección
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
+                <p className="mt-3 max-w-md text-sm leading-relaxed text-primary-foreground/80 sm:mt-4 sm:text-base lg:text-lg">
+                  Fragancias inspiradas de altísima persistencia. La mejor relación calidad-precio
+                  sin renunciar a la exclusividad.
+                </p>
+
+                <ProductLineCollectionLink />
+              </div>
+
+              <div className="order-1 lg:order-2">
+                <div className="relative mx-auto aspect-3/4 w-full max-w-[260px] overflow-hidden rounded-2xl border border-primary-foreground/15 bg-primary-foreground/5 p-8 shadow-inner sm:max-w-[300px] sm:p-10 lg:mx-0 lg:max-w-none">
+                  <Image
+                    src={productLineImages.alternativas}
+                    alt="Frasco de perfume — Línea Alternativas"
+                    fill
+                    sizes="(max-width: 1024px) 280px, 50vw"
+                    placeholder="blur"
+                    blurDataURL={perfumeImageBlur}
+                    className="object-contain transition-transform duration-650 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05] group-hover:-translate-y-2.5"
+                  />
+                </div>
+              </div>
             </div>
           </motion.article>
         </div>
@@ -502,12 +655,13 @@ function Footer() {
         <div className="flex flex-col items-center justify-between gap-6 sm:gap-8 lg:flex-row">
           {/* Logo */}
           <Link href="/" className="group flex items-center gap-1.5 sm:gap-2">
-            <span className="font-serif text-xl font-semibold tracking-wide text-foreground transition-colors group-hover:text-accent sm:text-2xl">
-              DUNA
-            </span>
-            <span className="font-serif text-xs font-light tracking-widest text-muted-foreground sm:text-sm">
-              Perfumes
-            </span>
+            <Image
+              src="/logo.png"
+              alt="Duna Perfumes"
+              width={588}
+              height={588}
+              className="h-16 w-auto filter grayscale opacity-90 transition-opacity duration-300 group-hover:opacity-100"
+            />
           </Link>
 
           {/* Social Links */}
@@ -549,6 +703,7 @@ export default function DunaLandingPage() {
         <HeroSection />
         <HistoriaSection />
         <ProductLinesSection />
+        <BrandTicker />
         <BeneficiosSection />
       </main>
       <Footer />
