@@ -120,7 +120,7 @@ const beneficioCardVariants = {
 // ============================================
 function Navbar() {
   return (
-    <header className="sticky top-0 z-50 w-full bg-[#F4EFEA]/80 backdrop-blur-md border-b border-border/40">
+    <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b border-border/40">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 sm:py-4 lg:px-8">
         {/* Logo */}
         <Link href="/" className="group flex items-center gap-1.5 sm:gap-2">
@@ -151,7 +151,7 @@ function Navbar() {
 // ============================================
 function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#F4EFEA] via-[#EDE6DD] to-[#E7E0D8]">
+    <section className="relative overflow-hidden bg-linear-to-b from-background via-muted to-background">
       {/* Decorative Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
@@ -229,7 +229,7 @@ function HeroSection() {
       </div>
 
       {/* Bottom Fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background to-transparent sm:h-24" />
+      <div className="absolute bottom-0 left-0 right-0 h-16 bg-linear-to-t from-background to-transparent sm:h-24" />
     </section>
   )
 }
@@ -301,7 +301,7 @@ function HistoriaSection() {
 // ============================================
 function ProductLinesSection() {
   return (
-    <section id="catalogo" className="bg-[#EDE6DD] py-16 sm:py-20 lg:py-32">
+    <section id="catalogo" className="bg-muted py-16 sm:py-20 lg:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="mb-10 text-center sm:mb-16">
@@ -464,7 +464,7 @@ function BeneficiosSection() {
               variants={beneficioCardVariants}
             >
               {/* Background Accent on Hover */}
-              <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+              <div className="absolute inset-0 bg-linear-to-br from-accent/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
 
               <div className="relative">
                 {/* Icon Container */}
@@ -497,7 +497,7 @@ function BeneficiosSection() {
 // ============================================
 function Footer() {
   return (
-    <footer className="border-t border-border/40 bg-[#EDE6DD]">
+    <footer className="border-t border-border/40 bg-muted">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
         <div className="flex flex-col items-center justify-between gap-6 sm:gap-8 lg:flex-row">
           {/* Logo */}

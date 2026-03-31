@@ -4,61 +4,40 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* DUNA Perfumes - Luxury Arabic Theme */
-  /* Sand/Beige backgrounds */
-  --background: #F4EFEA;
-  --foreground: #1c1917; /* stone-900 */
-  
-  /* Card - slightly lighter sand */
-  --card: #FAF8F5;
-  --card-foreground: #1c1917;
-  
-  /* Popover */
-  --popover: #FAF8F5;
-  --popover-foreground: #1c1917;
-  
-  /* Primary - Charcoal/Dark */
-  --primary: #292524; /* stone-800 */
-  --primary-foreground: #FAF8F5;
-  
-  /* Secondary - Warm beige */
+  --background: #F8F5F2;
+  --foreground: #1C1917;
+  --card: #FFFFFF;
+  --card-foreground: #1C1917;
+  --popover: #FFFFFF;
+  --popover-foreground: #1C1917;
+  --primary: #292524;
+  --primary-foreground: #F8F5F2;
   --secondary: #E7E0D8;
-  --secondary-foreground: #1c1917;
-  
-  /* Muted */
-  --muted: #E7E0D8;
-  --muted-foreground: #57534e; /* stone-600 */
-  
-  /* Accent - Muted Gold/Bronze */
+  --secondary-foreground: #1C1917;
   --accent: #B89B72;
-  --accent-foreground: #1c1917;
-  
-  /* Destructive */
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: #FAF8F5;
-  
-  /* Border - subtle warm */
+  --accent-foreground: #FFFFFF;
+  --muted: #E7E0D8;
+  --muted-foreground: #78716C;
   --border: #D6CFC6;
   --input: #D6CFC6;
   --ring: #B89B72;
-  
-  /* Charts */
+
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: #F8F5F2;
   --chart-1: #B89B72;
   --chart-2: #8B7355;
-  --chart-3: #57534e;
+  --chart-3: #78716C;
   --chart-4: #D6CFC6;
   --chart-5: #292524;
-  
-  /* Radius - more rounded for luxury feel */
+
   --radius: 1rem;
-  
-  /* Sidebar */
-  --sidebar: #FAF8F5;
-  --sidebar-foreground: #1c1917;
+
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #1C1917;
   --sidebar-primary: #292524;
-  --sidebar-primary-foreground: #FAF8F5;
+  --sidebar-primary-foreground: #F8F5F2;
   --sidebar-accent: #E7E0D8;
-  --sidebar-accent-foreground: #1c1917;
+  --sidebar-accent-foreground: #1C1917;
   --sidebar-border: #D6CFC6;
   --sidebar-ring: #B89B72;
 }
