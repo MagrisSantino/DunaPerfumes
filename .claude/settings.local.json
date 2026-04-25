@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(npm install *)",
+      "Bash(npx next *)",
+      "Bash(node -e \"const d = require\\('./data/products.json'\\); console.log\\('Total:', d.length\\)\")",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('Total:', len\\(d\\)\\)\")",
+      "Bash(node -e ' *)",
+      "Skill(update-config)",
+      "Skill(update-config:*)"
+    ]
+  }
+}

@@ -1,0 +1,166 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ────────────────────────────────────────────────────────────
+   DUNA Perfumes — base styles
+   ──────────────────────────────────────────────────────────── */
+
+@layer base {
+  :root {
+    --scrollbar-width: 0px;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-cream text-espresso font-sans;
+    font-feature-settings: 'ss01', 'cv11';
+  }
+
+  ::selection {
+    @apply bg-gold/30 text-espresso;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-sand-100;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-sand-400 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-sand-500;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-light tracking-tight text-espresso;
+  }
+
+  /* Focus rings */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-gold ring-offset-2 ring-offset-cream;
+  }
+
+  button, a {
+    @apply transition-all duration-300;
+  }
+}
+
+@layer components {
+  /* ── Container ── */
+  .container-duna {
+    @apply max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10;
+  }
+
+  /* ── Buttons ── */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-3.5
+      bg-espresso text-cream text-sm font-medium tracking-widest uppercase
+      hover:bg-gold hover:text-cream
+      disabled:opacity-50 disabled:cursor-not-allowed
+      rounded-none border border-espresso hover:border-gold;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-3.5
+      bg-transparent text-espresso text-sm font-medium tracking-widest uppercase
+      border border-espresso hover:bg-espresso hover:text-cream
+      disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-gold {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-3.5
+      bg-gold text-cream text-sm font-medium tracking-widest uppercase
+      hover:bg-gold-dark
+      disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2
+      text-espresso hover:text-gold text-sm font-medium tracking-wider;
+  }
+
+  /* ── Inputs ── */
+  .input-duna {
+    @apply w-full px-4 py-3 bg-transparent border border-sand-300
+      text-espresso placeholder:text-sand-500
+      focus:border-gold focus:outline-none focus:ring-0
+      transition-colors duration-200;
+  }
+
+  .input-admin {
+    @apply w-full px-3 py-2 bg-white border border-sand-300 rounded-md
+      text-espresso placeholder:text-sand-500 text-sm
+      focus:border-gold focus:ring-1 focus:ring-gold focus:outline-none;
+  }
+
+  .label-duna {
+    @apply block text-xs font-medium tracking-widest uppercase text-espresso-lighter mb-2;
+  }
+
+  /* ── Cards ── */
+  .card-product {
+    @apply group relative overflow-hidden bg-sand-50
+      transition-all duration-500 cursor-pointer;
+  }
+
+  /* ── Section headings ── */
+  .eyebrow {
+    @apply text-xs font-medium tracking-widest3 uppercase text-gold;
+  }
+
+  .section-title {
+    @apply font-display text-4xl md:text-5xl lg:text-6xl font-light text-espresso;
+  }
+
+  /* ── Hairline divider ── */
+  .hairline {
+    @apply border-0 h-px bg-gradient-to-r from-transparent via-sand-400 to-transparent;
+  }
+
+  /* ── Announcement marquee ── */
+  .marquee-track {
+    @apply flex whitespace-nowrap animate-marquee;
+  }
+
+  /* ── Admin layout ── */
+  .admin-card {
+    @apply bg-white rounded-lg shadow-soft border border-sand-200;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  /* Nice subtle grain texture */
+  .bg-grain {
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(45, 37, 33, 0.04) 1px, transparent 0);
+    background-size: 24px 24px;
+  }
+  /* Elegant image reveal */
+  .img-fade {
+    mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+  }
+}

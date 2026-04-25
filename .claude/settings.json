@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch",
+      "Bash(curl *)",
+      "Bash(test *)",
+      "Bash(echo *)",
+      "Bash(mkdir *)",
+      "Bash(node *)",
+      "Write(C:/Users/Admin/Desktop/Duna/public/uploads/*)"
+    ]
+  }
+}
